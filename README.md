@@ -1,3 +1,29 @@
+# New build instructions
+This is after updating all.get in libOTe/cryptoTools/thirdparty/linux and adding -no-pie CXX flag to libOTe/CMakeLists.txt, Ivory-Runtime/CMakeLists.txt. and CMakeLists.txt. Install NASM to ensure that project builds and runs as expected.
+
+```bash
+git clone --recursive git@github.com:turanzv/secure-kmean-clustering.git
+cd libOTe/cryptoTools/thirdparty/linux
+bash all.get
+cd ../../..
+cmake . -G"Unix Makefiles"
+make
+cd ../Ivory-Runtime/thirdparty/linux
+bash ntl.get
+cd ../../..
+cmake -G"Unix Makefiles"
+make
+```
+
+To test:
+```bash
+# from root in one terminal
+./bin/frontend -r 0
+# from root in another terminal
+./bin/frontend -r 1
+```
+
+
 # Practical Privacy-Preserving K-means Clustering
 This is the implementation of our [PETS 2020](https://petsymposium.org/cfp20.php)  paper: **Practical Privacy-Preserving K-means Clustering**([ePrint](https://eprint.iacr.org/2019/1158)). 
 
