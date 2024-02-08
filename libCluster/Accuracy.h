@@ -388,6 +388,13 @@ namespace osuCrypto
 		return computeAccuracy(points, mydblClusters, expClusters);
 	}
 
+	/// @brief NOT USED. Only reference is commented out in main.cpp.
+	/// @param inputA 
+	/// @param inputB 
+	/// @param inNumCluster 
+	/// @param bitlength 
+	/// @param initCluster 
+	/// @return 
 	std::vector<std::vector<Word>> secureTestClusteringSignExtend(std::vector<std::vector<Word>>& inputA, std::vector<std::vector<Word>>& inputB, u64 inNumCluster, u64 bitlength, std::vector<std::vector<Word>> initCluster)
 	{
 
@@ -760,6 +767,13 @@ namespace osuCrypto
 		return myClusters;
 	}
 
+	/// @brief Jointly computes updated clusters based on inputA and inputB.
+	/// @param inputA Party 0's input.
+	/// @param inputB Part1's input.
+	/// @param inNumCluster Number of clusters.
+	/// @param bitlength Bitlength of circuit; mathematical field 2^bitlength.
+	/// @param initCluster Vector of old cluster centroids.
+	/// @return [k][d] vector of k cnetroids.
 	std::vector<std::vector<Word>> secureTestClustering(std::vector<std::vector<Word>>& inputA, std::vector<std::vector<Word>>& inputB, u64 inNumCluster, u64 bitlength, std::vector<std::vector<Word>> initCluster)
 	{
 
@@ -1136,6 +1150,12 @@ namespace osuCrypto
 		return myClusters;
 	}
 
+	/// @brief Computes cluster centroids from points[n][d] without OT or any secure computation.
+	/// @param points Points to cluster.
+	/// @param inNumCluster Number of clusters.
+	/// @param bitlength Bitlength of circuit; mathematical field 2^bitlength.
+	/// @param initCluster Vector of old cluster centroids.
+	/// @return [k][d] vector of k cnetroids.
 	std::vector<std::vector<double>> plaintextClustering_old(std::vector<std::vector<Word>>& points, u64 inNumCluster, u64 bitlength, std::vector<std::vector<Word>> initCluster)
 	{
 
@@ -1308,6 +1328,11 @@ namespace osuCrypto
 		return myClusters;
 	}
 
+	/// @brief Computes cluster centroids from points[n][d] without OT or any secure computation.
+	/// @param points Points to cluster.
+	/// @param inNumCluster Number of clusters.
+	/// @param bitlength Bitlength of circuit; mathematical field 2^bitlength.
+	/// @return [k][d] vector of k cnetroids.
 	std::vector<std::vector<double>> plaintextClustering_old(std::vector<std::vector<Word>>& points, u64 inNumCluster, u64 bitlength)
 	{
 
@@ -1479,6 +1504,11 @@ namespace osuCrypto
 
 	//===========new
 
+	/// @brief NOT USED.
+	/// @param points 
+	/// @param inNumCluster 
+	/// @param initCluster 
+	/// @return 
 	std::vector<std::vector<double>> plaintextClustering(std::vector<std::vector<Word>>& points, u64 inNumCluster, std::vector<std::vector<Word>> initCluster)
 	{
 
@@ -1655,6 +1685,12 @@ namespace osuCrypto
 	}
 
 
+	/// @brief NOT USED.
+	/// @param points 
+	/// @param inNumCluster 
+	/// @param initCluster 
+	/// @param shift 
+	/// @return 
 	std::vector<std::vector<Word>> secureClustering(std::vector<std::vector<Word>>& points, u64 inNumCluster, std::vector<std::vector<Word>> initCluster, u64 shift)
 	{
 		u64 shift10 = pow(10, shift);
@@ -1840,6 +1876,11 @@ namespace osuCrypto
 	}
 
 #if 0
+	/// @brief NOT USED.
+	/// @param points 
+	/// @param output 
+	/// @param expected 
+	/// @return 
 	double computeAccuracy(std::vector<std::vector<Word>>& points, std::vector<std::vector<double>> output, std::vector<std::vector<double>> expected)
 	{
 
