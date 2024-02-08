@@ -48,6 +48,12 @@ using namespace osuCrypto;
 namespace osuCrypto
 {
 
+	/// @brief Parses mDimensional data points into input, a vector of data points (vectors). The last dimension of every
+	///			point (the cluster index) is stored in cluster. NOT USED.
+	/// @param fileName File to read points from.
+	/// @param mDimension Number of dimensions of points.
+	/// @param input N-sized vector of mDimension-sized vectors (points).
+	/// @param cluster 
 	void loadTxtFile(const std::string& fileName, int mDimension, std::vector<std::vector<u64>>& input, std::vector<u64>& cluster)
 	{
 		std::ifstream inFile;
@@ -102,6 +108,10 @@ namespace osuCrypto
 	}
 
 
+	/// @brief Parses mDimensional data points into input, a vector of data points (vectors). NOT USED.
+	/// @param fileName File to read points from.
+	/// @param mDimension Number of dimensions of points.
+	/// @param input N-sized vector of mDimension-sized vectors (points).
 	void loadTxtFile(const std::string& fileName, int mDimension, std::vector<std::vector<u64>>& input)
 	{
 		std::ifstream inFile;
@@ -147,6 +157,12 @@ namespace osuCrypto
 	}
 
 
+	/// @brief Parses mDimensional data points into input, a vector of data points (vectors). Every even-th data point
+	///			is loaded into inputA. Every odd-th data point is loaded into inputB.
+	/// @param fileName File to read points from.
+	/// @param mDimension Number of dimensions of points.
+	/// @param inputA N/2-sized vector of mDimension-sized vectors (points).
+	/// @param inputB N/2-sized vector of mDimension-sized vectors (points).
 	void loadTxtFile(const std::string & fileName, int mDimension, std::vector<std::vector<u64>>& inputA, std::vector<std::vector<u64>>& inputB)
 	{
 		std::ifstream inFile;
@@ -190,6 +206,13 @@ namespace osuCrypto
 			iter++;
 		}
 	}
+	/// @brief Parses mDimensional data points into input, a vector of data points (vectors). If idxParty is 2, all
+	///			points go to that party. Else, every other point goes to the party. This is only used when idxParty
+	///			set to 2.
+	/// @param fileName File to read points from.
+	/// @param mDimension Number of dimensions of points.
+	/// @param inputA idxParty's input vector.
+	/// @param idxParty Owner of idxParty.
 	void loadTxtFile(const std::string & fileName, int mDimension, std::vector<std::vector<u64>>& inputA, u64 idxParty)
 	{
 		std::ifstream inFile;
@@ -236,6 +259,12 @@ namespace osuCrypto
 		}
 	}
 		
+	/// @brief Clusters all points according to ESD to experimental centroids in myClusters and ground truth centroids
+	///			in expClusters. Returns the ratio of correctly clustered points in myClusters to expClusters.
+	/// @param points Vector of data points (d-dim vectors).
+	/// @param myClusters Expirementally generated clusters.
+	/// @param expClusters "Ground Truth" clusters.
+	/// @return Number of correctly clustered points / total points.
 	double computeAccuracy(std::vector<std::vector<Word>>& points, std::vector<std::vector<double>>& myClusters, std::vector<std::vector<double>>& expClusters)
 	{
 		std::vector<std::vector<u64>> eDists(points.size()); //[i][k]
@@ -340,6 +369,11 @@ namespace osuCrypto
 		return ratio;
 	}
 	
+	/// @brief Transforms all points in myClusters from Words into Doubles and calls the above computeAccuracy function.
+	/// @param points Vector of data points (d-dim vectors).
+	/// @param myClusters Expirementally generated clusters.
+	/// @param expClusters "Ground Truth" clusters.
+	/// @return Number of correctly clustered points / total points.
 	double computeAccuracy(std::vector<std::vector<Word>>& points, std::vector<std::vector<Word>>& myClusters, std::vector<std::vector<double>>& expClusters)
 	{
 		std::vector<std::vector<double>> mydblClusters(myClusters.size());
