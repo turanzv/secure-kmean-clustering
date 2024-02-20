@@ -386,6 +386,8 @@ void party1_Dist()
 
 }
 
+/// @brief Computes distance for Alice between all data points and shared cluster centers
+/// 		Includes setup: secret sharing of datasets
 void party0_DistNorm(int norm1) //0 is inf, 1 is norm1
 {
 	Timer timer;
@@ -491,6 +493,9 @@ void party0_DistNorm(int norm1) //0 is inf, 1 is norm1
 
 
 }
+
+/// @brief Computes distance for Bob between all data points and shared cluster centers
+/// 		Includes setup: secret sharing of datasets
 void party1_DistNorm(int norm1) //0 is inf, 1 is norm1
 {
 	Timer timer;
