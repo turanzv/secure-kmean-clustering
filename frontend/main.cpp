@@ -605,7 +605,8 @@ void party1_DistNorm(int norm1) //0 is inf, 1 is norm1
 
 }
 
-
+/// @brief Computes minumum between point and cluster centers
+/// 		Includes setup: secret sharing of datasets, computation of dummy distances
 void party0_Min()
 {
 	Timer timer;
@@ -776,6 +777,9 @@ void party0_Min()
 	std::cout << "start Min comm. = " << bandwithMinStart << "\t  MB\n";
 	std::cout << "done Min comm. = " << bandwith << "\t | \t " << bandwith - bandwithMinStart << "  MB\n========================\n";
 }
+
+/// @brief Computes minumum between point and cluster centers
+/// 		Includes setup: secret sharing of datasets, computation of dummy distances
 void party1_Min()
 {
 	Timer timer;
