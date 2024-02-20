@@ -130,6 +130,8 @@ void generateDist_VecIdxMin()
 	
 }
 
+/// @brief Computes distance for Bob between all data points and shared cluster centers
+/// 		Includes setup: secret sharing of datasets
 void party0_Dist()
 {
 	Timer timer;
@@ -259,6 +261,8 @@ void party0_Dist()
 	std::cout << "done Dist comm. = " << bandwith << "\t" << bandwith - bandwithDistStart << "  MB\n========================\n";
 
 }
+/// @brief Computes distance for Bob between all data points and shared cluster centers
+/// 		Includes setup: secret sharing of datasets
 void party1_Dist()
 {
 	Timer timer;
@@ -391,7 +395,7 @@ void party0_DistNorm(int norm1) //0 is inf, 1 is norm1
 
 	u64 inMod = pow(2, inExMod);
 	std::vector<std::vector<Word>> inputA;
-	//loadTxtFile("I:/kmean-impl/dataset/s1.txt", inDimension, inputA, inputB);
+	loadTxtFile("I:/kmean-impl/dataset/s1.txt", inDimension, inputA, 0);
 
 	PRNG prng(ZeroBlock);
 
@@ -2108,7 +2112,7 @@ void unitTest()
 						//party0_Clustering();
 					});
 
-					//party1_Dist();
+					// party1_Dist();
 					//party1_Min();
 					//party1_Min_BaseLine();
 					//party1_DistNorm(1);
@@ -2141,7 +2145,7 @@ int main(int argc, char** argv)
 
 	else if (argc == 3 && argv[1][0] == '-' && argv[1][1] == 'r' && atoi(argv[2]) == 0) {
 
-		//party0_Dist();
+		// party0_Dist(); 
 		for (u64 d : { 2})
 		{
 			inDimension = d;
