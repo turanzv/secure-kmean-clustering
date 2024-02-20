@@ -1142,7 +1142,7 @@ void party1_Min_BaseLine()
 
 
 
-
+/// @brief Updates cluster centers (part II.c of Lloyd's iteration from the paper)
 void party0_UpdateCluster()
 {
 	Timer timer;
@@ -1293,6 +1293,8 @@ void party0_UpdateCluster()
 
 
 }
+
+/// @brief Updates cluster centers (part II.c of Lloyd's iteration from the paper)
 void party1_UpdateCluster()
 {
 
