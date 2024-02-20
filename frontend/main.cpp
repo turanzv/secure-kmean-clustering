@@ -1434,6 +1434,7 @@ void party1_UpdateCluster()
 }
 
 
+/// @brief Initializes, computes distance, minimum, and cluster updating 
 void party0_Clustering()
 {
 	Timer timer;
@@ -1661,6 +1662,8 @@ void party0_Clustering()
 	std::cout << "comm. = " << bandwith << " MB\n";
 
 }
+
+/// @brief Initializes, computes distance, minimum, and cluster updating
 void party1_Clustering()
 {
 	Timer timer;
