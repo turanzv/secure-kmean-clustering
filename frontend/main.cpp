@@ -1666,6 +1666,7 @@ void party0_Clustering()
 /// @brief Initializes, computes distance, minimum, and cluster updating
 void party1_Clustering()
 {
+	// I.b: initialization
 	Timer timer;
 	IOService ios;
 	Session ep10(ios, "127.0.0.1", SessionMode::Client);
@@ -1674,6 +1675,7 @@ void party1_Clustering()
 	std::vector<std::vector<Word>> inputB;
 	//loadTxtFile("I:/kmean-impl/dataset/s1.txt", inDimension, inputA, inputB);
 
+	//Generate random cluster for p1
 	PRNG prng(ZeroBlock);
 	inputB.resize(numberTestB);
 	for (int i = 0; i < numberTestB; i++)
@@ -1683,7 +1685,10 @@ void party1_Clustering()
 			inputB[i][j] = prng.get<Word>() % inMod;
 	}
 
+	// variable for total n points
 	u64 inTotalPoint = numberTestA + inputB.size();
+
+	// setup OT
 	//=======================offline===============================
 	DataShare  p1;
 
@@ -1725,11 +1730,16 @@ void party1_Clustering()
 	std::cout << "offlineDone\n";
 
 
+	// Receives p0's inputs, prepends them to p1' data structure
+	// [0:n/2] <-- p0
+	// [n/2:n] <-- p1
 	//=======================online (sharing)===============================
 	p1.recvShareInput(0, 0, inNumCluster / 2);
 	p1.sendShareInput(p1.mTheirNumPoints, inNumCluster / 2, inNumCluster);
 
 	timer.setTimePoint("sharingInputsDone");
+
+	//************************** II LLOYD"S ITERATION **************************
 
 	//=======================online OT (setting up keys for adaptive ED)===============================
 	p1.correctAllChoiceSender(); //1st OT
@@ -1741,14 +1751,14 @@ void party1_Clustering()
 	timer.setTimePoint("OTkeysDone");
 	std::cout << "OTkeysDone\n";
 
-
+	// FOR THE NUMBER OF ITERATIONS TO CLUSTER
 	for (u64 idxIter = 0; idxIter < numInteration; idxIter++)
 	{
 		std::cout << "-";
 
+		// Sequential amortized multiplication
 		//=======================online MUL===============================
 		p1.mProdCluster = p1.amortMULsend(p1.mShareCluster, idxIter*p1.mNumCluster*p1.mDimension*p1.mLenMod);//(c^A[k][d]*c^B[k][d])
-
 																											 //(p^A[i][d]*(p^B[i][d]-c^B[k][d])
 		for (u64 i = 0; i < p1.mTotalNumPoints; i++)
 			for (u64 d = 0; d < p1.mDimension; d++)
@@ -1767,11 +1777,11 @@ void party1_Clustering()
 				p1.mProdPointPC[i][d] = p1.amortAdaptMULrecv(i, d, p1.mNumCluster); //for each point to all clusters
 
 		
-																					
+		// II.a computer distance between all n points and cluster centers										
         //=======================online locally compute ED===============================
 		p1.computeDist();
 
-
+		// II.b jointly compute the nearest cluster
 		//=======================compute MIN===============================
 		std::vector<std::vector<iWord>> outShareSend1, outShareRecv1;
 		std::vector<std::vector<BitVector>> outIdxShareSend1, outIdxShareRecv1;
@@ -1800,9 +1810,7 @@ void party1_Clustering()
 
 		}
 
-
-
-
+		// Mask decimal to binary, compute the shared minimum
 		p1.amortBinArithMULrecv(outShareRecv1, p1.mVecGcMinOutput); //(b^A \xor b^B)*(P^A)
 		p1.amortBinArithMulsend(outShareSend1, p1.mVecGcMinOutput, p1.mDist); //(b^A \xor b^B)*(P^B)
 		p1.computeShareMin(outShareSend1, outShareRecv1); //compute (b1^A \xor b1^B)*(P1^A+P1^B)+(b2^A \xor b2^B)*(P2^A+P2^B)
@@ -1814,6 +1822,7 @@ void party1_Clustering()
 
 		//=============2nd level loop until root==================================
 
+		// find and assign the nearest minimum
 		while (p1.mShareMin[0].size() > 1) //while (0)
 		{
 
@@ -1848,14 +1857,19 @@ void party1_Clustering()
 
 		}
 
+		// II.c jointly compute the secret share of the new cluster center
+		// nom/dec is an input to the garbled circuit
 		////=====================compute nom/dec===========================
 		std::vector<std::vector<iWord>>  shareNomSend1, shareNomRecv1;
 		std::vector<iWord> shareDenSend1, shareDenRecv1;
 		p1.vecMinTranspose();
+		//Num calculated
 		p1.amortBinArithClustrecv(p1.mVecIdxMinTranspose, shareNomRecv1, shareDenRecv1, true);
+		//Den calculated
 		p1.amortBinArithClustsend(p1.mVecIdxMinTranspose, shareNomSend1, shareDenSend1, false);
 		p1.computeShareCluster(shareNomSend1, shareNomRecv1, shareDenSend1, shareDenRecv1);
 
+		//II.d. stopping criterion
 		////=====================division===========================
 		u8 isDenZero1; //check den=0?
 		for (u64 k = 0; k < p1.mNumCluster; k++)
@@ -1867,6 +1881,7 @@ void party1_Clustering()
 				Word myShare = 0;
 				for (u64 d = 0; d < p1.mDimension; d++)
 				{
+					// invoking of the division garbled circuit
 					programDiv(p1.parties, p1.mShareNomCluster[k][d], p1.mShareDecCluster[k], myShare, p1.mLenMod);
 					p1.mShareCluster[k][d] = myShare;
 				}
@@ -2020,7 +2035,7 @@ void nPartiesClustering()
 		//<< "T= " << p0.mIteration 
 		<< "\t computeAccurancy\n";
 
-
+	// I: Initialization
 	std::vector<std::vector<Word>> allPoints;
 	loadTxtFile("./dataset/s1.txt", inDimension, allPoints, 2);
 
@@ -2040,7 +2055,7 @@ void nPartiesClustering()
 	u64 inClusterA = inNumCluster / 2;
 	u64 inClusterB = inNumCluster - inClusterA;
 
-
+	// I.a, I.b: A and B compute centroids locally to start
 	auto initClusterA = plaintextClustering_old(partyPoints[0], inClusterA, inExMod);
 	auto initClusterB = plaintextClustering_old(partyPoints[1], inClusterB, inExMod);
 	std::vector<std::vector<Word>> initClustersSecure(inNumCluster);
@@ -2059,7 +2074,7 @@ void nPartiesClustering()
 			initClustersSecure[k][d] = initClusterB[k - inClusterA][d];
 	}
 
-
+	// II Lloyd's iteration
 	auto nClusters=secureTestClustering(partyPoints[0], partyPoints[1], inNumCluster, inExMod, initClustersSecure);
 
 
@@ -2175,13 +2190,13 @@ int main(int argc, char** argv)
 					{
 						numInteration = T;
 						//	boost::this_thread::sleep(boost::posix_time::seconds(2));
-						party0_Dist();
+						//party0_Dist();
 						//party0_DistNorm(1);
 						//party0_DistNorm(0);
 						//party0_Min();
 						//party0_Min_BaseLine();
 						//party0_UpdateCluster();
-						//party0_Clustering();
+						party0_Clustering();
 					}
 				}
 			}
@@ -2207,13 +2222,13 @@ int main(int argc, char** argv)
 					{
 						numInteration = T;
 						//boost::this_thread::sleep(boost::posix_time::seconds(2));
-						party1_Dist();
+						//party1_Dist();
 						//party1_DistNorm(1);
 						//party1_DistNorm(0);
 						//party1_Min();
 						//party1_Min_BaseLine();
 						//party1_UpdateCluster();
-						//party1_Clustering();
+						party1_Clustering();
 
 
 					}

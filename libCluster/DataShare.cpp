@@ -1103,6 +1103,11 @@ namespace osuCrypto
 #endif
 	}
 
+	/// @brief Masks the given cluster into a binary format(masking)
+	/// @param bitVecs 
+	/// @param outNomSend 
+	/// @param outDenSend 
+	/// @param isDen 
 	void DataShare::amortBinArithClustsend(std::vector<BitVector>& bitVecs, std::vector<std::vector<iWord>>& outNomSend, std::vector<iWord>& outDenSend, bool isDen)
 	{
 		outNomSend.resize(mNumCluster);
