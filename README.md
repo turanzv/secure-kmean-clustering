@@ -15,12 +15,28 @@ cmake -G"Unix Makefiles"
 make
 ```
 
-To test:
+## Usage
+`main.cpp` calls nPartiesClustering with the following parameters:
+- p: u64, number of parties
+- dim: u64, dimensions of data points
+- k: u64, number of k centers to compute
+- mod: u64, binary arithmetic field (simetimes referred to as l in the paper)
+- data: std::string, datafile to read points from 
+- acc: bool, toggles the exxecution of `computeAccuracy()`.
+
 ```bash
-# from root in one terminal
-./bin/frontend -r 0
-# from root in another terminal
-./bin/frontend -r 1
+# from root with default values
+# p		4
+# dim	2
+# k		16
+# mod	30
+# data	dataset/s1.txt
+# acc	1
+./bin/frontend
+
+# overwriting some values
+# both "-" and "--" work
+./bin/frontend -p 2 -dim 3 -k 8 --mod 32
 ```
 
 
