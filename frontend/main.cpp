@@ -1755,6 +1755,10 @@ void party1_Clustering()
 	// p1.Print();
 }
 
+//TODO: Rename this to computeAccuracyWrtCentroids
+/* @brief Compares the differences between each centroid and the dataset points.
+Plots a diff between the experimentally generated centroids and ground truth centroids.  
+*/
 void computeAccurancy()
 {
 
@@ -1813,7 +1817,7 @@ void computeAccurancy()
 		for (u64 d = 0; d < inDimension; d++)
 			initClustersSecure[k][d] = initClusterB[k - inClusterA][d];
 	}
-
+	//TODO: Refactor the name to plaintextClustering_comparison
 	auto myPlaintextClusters = plaintextClustering_old(points, inNumCluster, inExMod, initPointClusters);
 	auto mySecureClusters = secureTestClustering(inputA, inputB, inNumCluster, inExMod, initPointClusters);
 	// secureTestClustering(inputA, inputB, inNumCluster, inExMod, initPointClusters);
@@ -1929,7 +1933,7 @@ void nPartiesClustering(u64 nParties, u64 inDimension, u64 inNumCluster, u64 inE
 
 	outdata << "Centroids";
 
-	for (u64 k = 0; k < nClusters.size(); k++) // assign cluster
+	for (u64 k = 0; k < nClusters.size(); k++)
 	{
 		for (u64 d = 0; d < inDimension; d++)
 		{
@@ -2003,12 +2007,19 @@ int main(int argc, char **argv)
 	CLP clp;
 	clp.parse(argc, argv);
 
+	clp.setDefault(std::string("kdtest"), std::string("0"));
 	clp.setDefault(std::string("p"), std::string("4"));
 	clp.setDefault(std::string("dim"), std::string("2"));
 	clp.setDefault(std::string("k"), std::string("15"));
 	clp.setDefault(std::string("mod"), std::string("30"));
 	clp.setDefault(std::string("data"), std::string("./dataset/s1.txt"));
 	clp.setDefault(std::string("acc"), std::string("1"));
+
+	if(clp.getInt(std::string("kdtest"))) {
+		//TODO RUN PLAINTEXT KD TESTS
+		// only tests kd tree code until we're convinced that it's integrated and working well
+		return 0;
+	} 
 
 	u64 parties = clp.getInt(std::string("p"));
 	u64 dim = clp.getInt(std::string("dim"));

@@ -995,7 +995,8 @@ namespace osuCrypto
 			std::vector<std::vector<iWord>> nomCluster(p0.mNumCluster);//[k][d]
 			std::vector<iWord> denCluster(p0.mNumCluster, 0);//[k]
 
-															 //compute dist
+			//TODO BUILD KD TREE HERE
+			//compute dist
 			for (u64 i = 0; i < p0.mTotalNumPoints; i++) //original points
 			{
 				eDists[i].resize(p0.mTotalNumPoints, 0);
@@ -1012,6 +1013,7 @@ namespace osuCrypto
 				}
 			}
 
+			//TODO TRAVERSE KD TREE HERE
 			//compute vecMin
 			for (u64 i = 0; i < p0.mTotalNumPoints; i++)
 			{
@@ -1086,7 +1088,7 @@ namespace osuCrypto
 
 			//check stop
 
-
+			//TODO TRAVERSE KD TREE HERE
 			//compute cluster dist
 			u64 error = 0;
 			std::vector<iWord> clusterDists(p0.mNumCluster, 0); //[k][k]
@@ -1150,6 +1152,7 @@ namespace osuCrypto
 		return myClusters;
 	}
 
+	//TODO MAKE ANOTHER ONE USING KD TREES
 	/// @brief Computes cluster centroids from points[n][d] without OT or any secure computation.
 	/// @param points Points to cluster.
 	/// @param inNumCluster Number of clusters.
@@ -1328,6 +1331,7 @@ namespace osuCrypto
 		return myClusters;
 	}
 
+	//TODO MAKE ANOTHER ONE USING KD TREES
 	/// @brief Computes cluster centroids from points[n][d] without OT or any secure computation.
 	/// @param points Points to cluster.
 	/// @param inNumCluster Number of clusters.
